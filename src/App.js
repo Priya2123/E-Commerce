@@ -4,36 +4,37 @@ import {Products, Navbar} from './components'; //for this - default export in in
 
 const App = () => {
     const [products, setProducts] = useState([]);
-    
-    // const fetchProducts = () => {
-    //     commerce.products
-    //       .list()
-    //       .then((res) => {
-    //         setProducts([...products, res.data]); //wrapping in array
-    //       })
-    //       .catch((err) => {
-    //         console.log(err, "error");
-    //         console.log('Hey beb')
-    //       });
-    //   };
+    const [cart, setCart] = useState({});
+
     const fetchProducts = async () => {
         const response = await commerce.products.list();   //{data}
        if (response) {
         setProducts([...products,response.data]);
        }
     };
+ 
+    const fetchCart = async () => {
+        setCart(await commerce.cart.retrieve())
+    }
 
+    const handleAddToCart = async (productId, quantity) => {
+        const item = await commerce.cart.add(productId, quantity)
+
+        setCart(item.cart);
+    }
     useEffect(() => {
         fetchProducts();
+        fetchCart();
     }, []);
      //run at the start on the render
 
-    console.log(products);
+    // console.log(products);
+    console.log(cart);
 
     return (
         <div>
-            <Navbar />
-            {products && <Products products={products} />} 
+            <Navbar totalItems={cart.total_items} />
+            {products && <Products products={products} onAddToCart={handleAddToCart} />} 
             {/* {products?.length > 0 && <Products products={products} />} */}
         </div>
     )

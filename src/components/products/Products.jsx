@@ -8,22 +8,21 @@ import useStyles from './styles'
 //     {id:2, name:"MacBook", description:"mac", price: "$20", image:'https://images.pexels.com/photos/1181288/pexels-photo-1181288.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260'},
 // ]
 
-const Products = ({ products }) => {
+const Products = ({ products, onAddToCart }) => {
   const classes = useStyles()
   return (
     <main className={classes.content}>
       <div className={classes.toolbar} />
       <Grid container justify="center" spacing={4} lg={12} md={12}>
         {products &&
-        products[0]?.map((product) => (
+          products[0]?.map((product) => (
             <Grid item key={product.id} xs={12} sm={6} md={4} lg={3}>
-              <Product product={product} />
+              <Product product={product} onAddToCart={onAddToCart} />
             </Grid>
-          )
-        )}
+          ))}
       </Grid>
     </main>
   )
 }
 
-export default Products;
+export default Products
