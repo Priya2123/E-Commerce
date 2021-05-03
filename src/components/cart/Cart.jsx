@@ -17,9 +17,9 @@ const Cart = ({ cart }) => {
   const FilledCart = () => {
     return(
         <>
-      <Grid container spacing={3}>
+      <Grid container spacing={4} md={12} lg={12} style={{maxWidth: '80%', justifyContent:'center' ,margin:'auto'}} justify="center">
         {cart.line_items.map((item) => (
-          <Grid item xs={12} sm={4} key={item.id}>
+          <Grid item xs={12} sm={4} key={item.id} >  
            <CartItem item={item} />
           </Grid>
         ))}
@@ -58,7 +58,7 @@ const Cart = ({ cart }) => {
   return (
     <Container>
       <div className={classes.toolbar}>
-        <Typography className={classes.title} variant="h3">
+        <Typography className={classes.title} variant="h3" gutterBottom>
           Your Shopping Cart
         </Typography>
         {!cart?.line_items?.length ? <EmptyCart /> : <FilledCart />}
