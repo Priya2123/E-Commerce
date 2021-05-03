@@ -1,11 +1,9 @@
 import React from 'react'
 import { Container, Typography, Grid, Button } from '@material-ui/core'
 import useStyles from './styles'
-import { LocalDining } from '@material-ui/icons'
 
 const Cart = ({ cart }) => {
-  const classes = useStyles()
-  const isEmpty = !cart?.line_items?.length;
+  const classes = useStyles();
   
   const EmptyCart = () => {
     return(
@@ -62,7 +60,7 @@ const Cart = ({ cart }) => {
         <Typography className={classes.title} variant="h3">
           Your Shopping Cart
         </Typography>
-        {isEmpty ? <EmptyCart /> : <FilledCart />}
+        {!cart?.line_items?.length ? <EmptyCart /> : <FilledCart />}
       </div>
     </Container>
   )
