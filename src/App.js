@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {commerce} from './lib/commerce';
 import {Products, Navbar} from './components'; //for this - default export in index.js in components
+import Cart from './components/cart/Cart';
 
 const App = () => {
     const [products, setProducts] = useState([]);
@@ -28,13 +29,14 @@ const App = () => {
     }, []);
      //run at the start on the render
 
-    // console.log(products);
+    console.log(products);
     console.log(cart);
 
     return (
         <div>
             <Navbar totalItems={cart.total_items} />
-            {products && <Products products={products} onAddToCart={handleAddToCart} />} 
+            {/* {products && <Products products={products} onAddToCart={handleAddToCart} />}  */}
+            <Cart cart={cart}/>
             {/* {products?.length > 0 && <Products products={products} />} */}
         </div>
     )

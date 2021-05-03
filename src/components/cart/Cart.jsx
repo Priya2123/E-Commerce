@@ -1,18 +1,23 @@
 import React from 'react'
 import { Container, Typography, Grid, Button } from '@material-ui/core'
-import classes from '*.module.css'
+import useStyles from './styles'
+import { LocalDining } from '@material-ui/icons'
 
 const Cart = ({ cart }) => {
-  const isEmpty = !cart.line_items.length
-
+  const classes = useStyles()
+  const isEmpty = !cart?.line_items?.length;
+  
   const EmptyCart = () => {
-    ;<Typography variant="subtitle1">
-      You have no items in your shopping cart, start adding some!!
-    </Typography>
+    return(
+        <Typography variant="subtitle1">
+        You have no items in your shopping cart, start adding some!!
+      </Typography>
+    )
   }
 
   const FilledCart = () => {
-    ;<>
+    return(
+        <>
       <Grid container spacing={3}>
         {cart.line_items.map((item) => (
           <Grid item xs={12} sm={4} key={item.id}>
@@ -46,7 +51,11 @@ const Cart = ({ cart }) => {
         </div>
       </div>
     </>
+    )
   }
+
+  if (!cart.line_items) return <h3 style={{color: "#000", marginTop: '20%', textAlign:'center'}}>Loading...</h3>
+
   return (
     <Container>
       <div className={classes.toolbar}>
@@ -58,3 +67,5 @@ const Cart = ({ cart }) => {
     </Container>
   )
 }
+
+export default Cart;
