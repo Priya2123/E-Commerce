@@ -1,52 +1,74 @@
-import React, {useState, useEffect} from 'react';
-import {commerce} from './lib/commerce';
-import {Products, Navbar, Cart} from './components'; //for this - default export in index.js in components
-import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
+import React, { useState, useEffect } from 'react'
+import { commerce } from './lib/commerce'
+import { Products, Navbar, Cart } from './components' //for this - default export in index.js in components
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 
 const App = () => {
-    const [products, setProducts] = useState([]);
-    const [cart, setCart] = useState({});
+  const [products, setProducts] = useState([])
+  const [cart, setCart] = useState({})
 
-    const fetchProducts = async () => {
-        const response = await commerce.products.list();   //{data}
-       if (response) {
-        setProducts([...products,response.data]);
-       }
-    };
- 
-    const fetchCart = async () => {
-        setCart(await commerce.cart.retrieve())
+  const fetchProducts = async () => {
+    const response = await commerce.products.list() //{data}
+    if (response) {
+      setProducts([...products, response.data])
     }
+  }
 
-    const handleAddToCart = async (productId, quantity) => {
-        const item = await commerce.cart.add(productId, quantity)
+  const fetchCart = async () => {
+    setCart(await commerce.cart.retrieve())
+  }
 
-        setCart(item.cart);
-    }
-    useEffect(() => {
-        fetchProducts();
-        fetchCart();
-    }, []);
-     //run at the start on the render
+  const handleAddToCart = async (productId, quantity) => {
+    const item = await commerce.cart.add(productId, quantity)
 
-    console.log(products);
-    console.log(cart);
+    setCart(item.cart)
+  }
 
-    return (
-      <Router>
-            <div>
-            <Navbar totalItems={cart.total_items} />
-            <Switch>
-                <Route exact path="/">
-                {products && <Products products={products} onAddToCart={handleAddToCart} />} 
-                </Route>
-                <Route exact path="/cart">
-                <Cart cart={cart}/>
-                </Route>
-            </Switch>
-        </div>
-      </Router>
-    )
+  const handleUpdateCartQty = async (productId, quantity) => {
+    const { cart } = await commerce.cart.update(productId, { quantity })
+    setCart(cart)
+  }
+
+  const handleRemoveFromCart = async (productId) => {
+    const { cart } = await commerce.cart.remove(productId)
+    setCart(cart)
+  }
+
+  const handleEmptyCart = async () => {
+    const { cart } = await commerce.cart.empty()
+    setCart(cart)
+  }
+  useEffect(() => {
+    fetchProducts()
+    fetchCart()
+  }, [])
+  //run at the start on the render
+
+  console.log(products)
+  console.log(cart)
+
+  return (
+    <Router>
+      <div>
+        <Navbar totalItems={cart.total_items} />
+        <Switch>
+          <Route exact path="/">
+            {products && (
+              <Products products={products} onAddToCart={handleAddToCart} />
+            )}
+          </Route>
+          <Route exact path="/cart">
+            <Cart
+              cart={cart}
+              handleUpdateCartQty={handleUpdateCartQty}
+              handleRemoveFromCart={handleRemoveFromCart}
+              handleEmptyCart={handleEmptyCart}
+            />
+          </Route>
+        </Switch>
+      </div>
+    </Router>
+  )
 }
 
-export default App;
+export default App
