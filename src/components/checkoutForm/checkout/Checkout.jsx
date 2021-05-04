@@ -32,8 +32,8 @@ const Checkout = ({cart}) => {
         }
     }
     generateToken()
-  }, [])
-
+  }, [cart])
+//as soon as the cart changes, we have to recall for another token --> to avoid error of undefined on refresh
   const Confirmation = () => <div>Confirmation</div>
 
   const Form = () => (activeStep === 0 ? <AddressForm checkoutToken={checkoutToken} /> : <PaymentForm />)
@@ -53,8 +53,9 @@ const Checkout = ({cart}) => {
               </Step>
             ))}
           </Stepper>
-          {/* steps.length = last step or last element of array */}
-          {activeStep === steps.length ? <Confirmation /> : <Form />}
+          {/* steps.length = last step or last element of array  */}
+          {/* checkoutToken && Form --> renders the form only when we have token so that no null error occurs */}
+          {activeStep === steps.length ? <Confirmation /> : checkoutToken && <Form />}
         </Paper>
       </main>
     </>
