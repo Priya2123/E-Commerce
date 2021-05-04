@@ -8,7 +8,8 @@ const steps = ["Shipping address", "Payment details"]
 
 const Checkout = () => {
     const classes = useStyles();
-    const [activeStep, setActiveStep] = useState(0)
+    //0 - shipping , 1 - payment, 2 - confirmation
+    const [activeStep, setActiveStep] = useState(2)
 
     const Confirmation = () => (
         <div>
