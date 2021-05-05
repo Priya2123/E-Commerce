@@ -21,6 +21,7 @@ const Checkout = ({cart}) => {
   //0 - shipping , 1 - payment, 2 - confirmation
   const [activeStep, setActiveStep] = useState(0)
   const [checkoutToken, setCheckoutToken] = useState(null)
+  const [shipppingData, setShippingData] = useState({})
 
   useEffect(() => {
     const generateToken = async () => {
@@ -33,10 +34,19 @@ const Checkout = ({cart}) => {
     }
     generateToken()
   }, [cart])
+
+  const nextStep = () => setActiveStep((prevStep) => prevStep + 1);
+  const backStep = () => setActiveStep((prevStep) => prevStep - 1);
+
+  const next = (data) => {
+    setShippingData(data)
+    nextStep()
+  }
+
 //as soon as the cart changes, we have to recall for another token --> to avoid error of undefined on refresh
   const Confirmation = () => <div>Confirmation</div>
 
-  const Form = () => (activeStep === 0 ? <AddressForm checkoutToken={checkoutToken} /> : <PaymentForm />)
+  const Form = () => (activeStep === 0 ? <AddressForm checkoutToken={checkoutToken} next={next} /> : <PaymentForm shipppingData={shipppingData} />)
 
   return (
     <>
