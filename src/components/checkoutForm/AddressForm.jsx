@@ -29,14 +29,7 @@ const AddressForm = ({ checkoutToken }) => {
   const subdivisions = Object.entries(
     shippingSubdivisions,
   ).map(([code, name]) => ({ id: code, label: name }))
-
-  useEffect(() => {
-    fetchShippingCountries(checkoutToken.id)
-  }, [])
-
-  useEffect(() => {
-    if (shippingCountry) fetchSubdivisions(shippingCountry)
-  }, [shippingCountry])
+  const options = shippingOptions?.map((option) => ({id: option.id, label: `${option.description} - (${option.price.formatted_with_symbol})`}))
   
   const fetchShippingCountries = async (checkoutTokenId) => {
     const { countries } = await commerce.services.localeListShippingCountries(
@@ -54,6 +47,24 @@ const AddressForm = ({ checkoutToken }) => {
     setShippingSubdivisions(subdivisions)
     setShippingSubdivision(Object.keys(subdivisions)[0])
   }
+  //options - array
+  const fetchShippingOptions = async (checkoutTokenId, country, region = null) => {
+    const options = await commerce.checkout.getShippingOptions(checkoutTokenId, {country, region})
+    setShippingOptions(options);
+    setShippingOption(options[0].id)
+  }
+
+  useEffect(() => {
+    fetchShippingCountries(checkoutToken.id)
+  }, [])
+
+  useEffect(() => {
+    if (shippingCountry) fetchSubdivisions(shippingCountry)
+  }, [shippingCountry])
+
+  useEffect(() => {
+    if (shippingSubdivision) fetchShippingOptions(checkoutToken.id, shippingCountry, shippingSubdivision )
+  }, [shippingSubdivision])
 
   const handleCountryChange = (event) => {
     setShippingCountry(event.target.value)
@@ -105,14 +116,22 @@ const AddressForm = ({ checkoutToken }) => {
                 ))}
               </Select>
             </Grid>
-            {/* <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={6}>
                          <InputLabel>Shipping Options</InputLabel>
-                         <Select value={} onChange={} fullWidth>
-                             <MenuItem key={} value={}>
-                                 Select Me
-                             </MenuItem>
-                         </Select>
-                     </Grid> */}
+                         <Select
+                value={shippingOption}
+                labelId="shippingOption"
+                id="shippingOption"
+                fullWidth
+                onChange={(event) => setShippingOption(event.target.value)}
+              >
+                {options.map((option) => (
+                  <MenuItem key={option.id} value={option.id}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </Select>
+                     </Grid>
           </Grid>
         </form>
       </FormProvider>
