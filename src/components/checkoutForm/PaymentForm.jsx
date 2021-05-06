@@ -5,8 +5,9 @@ import {loadStripe} from '@stripe/stripe-js'
 import Review from './Review'
 
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY)
-const PaymentForm = ({checkoutToken, backStep}) => {
-    const handleSubmit = (event, elements, stripe) => {
+const PaymentForm = ({checkoutToken, backStep, shippingData, onCaptureCheckout, nextStep}) => {
+    console.log(shippingData)
+    const handleSubmit = async (event, elements, stripe) => {
         event.preventDefault() //website is not gonna refresh after we click the button
         
         if(!stripe || !elements) return;
@@ -18,7 +19,7 @@ const PaymentForm = ({checkoutToken, backStep}) => {
             console.log(error)
         }else{
             const orderData = {
-                line_items = checkoutToken.live.line_items,
+                line_items: checkoutToken.live.line_items,
                 customer: {firstname: shippingData.firstName, lastname: shippingData.lastName, email: shippingData.email},
                 shipping: 
                 {
@@ -33,10 +34,12 @@ const PaymentForm = ({checkoutToken, backStep}) => {
                 payment:{
                     gateway:'stripe',
                     stripe:{
-                        psyment_method_id = paymentMethod.id
+                        psyment_method_id: paymentMethod.id
                     }
                 }
             }
+            onCaptureCheckout(checkoutToken.id, orderData)
+            nextStep()
         }
     }
     return (

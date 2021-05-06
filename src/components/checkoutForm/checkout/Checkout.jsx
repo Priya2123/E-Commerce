@@ -4,32 +4,30 @@ import {
   Stepper,
   Step,
   StepLabel,
-  Divider,
-  CircularProgress,
-  Button,
   Typography,
 } from '@material-ui/core'
 import useStyles from './styles'
 import AddressForm from '../AddressForm'
 import PaymentForm from '../PaymentForm'
 import {commerce} from '../../../lib/commerce'
-
+import {useHistory} from 'react-router-dom'
 const steps = ['Shipping address', 'Payment details']
 
-const Checkout = ({cart}) => {
+const Checkout = ({cart, order, onCaptureCheckout, error}) => {
   const classes = useStyles()
+  const history = useHistory();
   //0 - shipping , 1 - payment, 2 - confirmation
   const [activeStep, setActiveStep] = useState(0)
   const [checkoutToken, setCheckoutToken] = useState(null)
-  const [shipppingData, setShippingData] = useState({})
+  const [shippingData, setShippingData] = useState({})
 
   useEffect(() => {
     const generateToken = async () => {
         try {
             const token = await commerce.checkout.generateToken(cart.id, {type: 'cart'})
             setCheckoutToken(token)
-        } catch (error) {
-            
+        }catch {
+          if (activeStep !== steps.length) history.push('/');
         }
     }
     generateToken()
@@ -38,16 +36,18 @@ const Checkout = ({cart}) => {
   const nextStep = () => setActiveStep((prevStep) => prevStep + 1);
   const backStep = () => setActiveStep((prevStep) => prevStep - 1);
 
-  const next = (data) => {
-    setShippingData(data)
-    nextStep()
-  }
-
 //as soon as the cart changes, we have to recall for another token --> to avoid error of undefined on refresh
   const Confirmation = () => <div>Confirmation</div>
 
-  const Form = () => (activeStep === 0 ? <AddressForm checkoutToken={checkoutToken} next={next} /> : <PaymentForm backStep={backStep} shipppingData={shipppingData} checkoutToken={checkoutToken} />)
+  const Form = () => (activeStep === 0 
+    ? <AddressForm checkoutToken={checkoutToken} next={next} /> 
+    : <PaymentForm nectStep={nextStep} onCaptureCheckout={onCaptureCheckout} backStep={backStep} shippingData={shippingData} checkoutToken={checkoutToken} nextStep={nextStep} />)
 
+    const next = (data) => {
+      setShippingData(data)
+      console.log("bleh",shippingData)
+      nextStep()
+    }
   return (
     <>
       <div className={classes.toolbar} />

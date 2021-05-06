@@ -20,7 +20,7 @@ const AddressForm = ({ checkoutToken, next }) => {
   const [shippingOptions, setShippingOptions] = useState([])
   const [shippingOption, setShippingOption] = useState(" ")
 
-  const methods = useForm()
+  const methods = useForm();
 
   //converting object into array to map
   const countries = Object.entries(shippingCountries).map(([code, name]) => ({
@@ -77,10 +77,10 @@ const AddressForm = ({ checkoutToken, next }) => {
         Shipping Address
       </Typography>
       <FormProvider {...methods}>
-        <form onSubmit={methods.handleSubmit((data) => next({...data, setShippingCountry, shippingSubdivision, shippingOption}))}>
+        <form onSubmit={methods.handleSubmit(async (data) => await next({...data, shippingCountry, shippingSubdivision, shippingOption}))}>
           <Grid container spacing={3}>
-            <CustomTextField required name="first name" label="First name" />
-            <CustomTextField required name="last name" label="Last name" />
+            <CustomTextField required name="firstName" label="First name" />
+            <CustomTextField required name="lastName" label="Last name" />
             <CustomTextField required name="address" label="Address" />
             <CustomTextField required name="email" label="Email" />
             <CustomTextField required name="city" label="City" />
