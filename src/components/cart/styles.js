@@ -4,6 +4,9 @@ export default makeStyles((theme) => ({
   toolbar: theme.mixins.toolbar,
   title: {
     marginTop: '7%',
+    [theme.breakpoints.down('xs')]: {
+      marginTop: '20%',
+    },
   },
   emptyButton: {
     minWidth: '150px',
