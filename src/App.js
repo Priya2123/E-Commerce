@@ -44,8 +44,8 @@ const App = () => {
   }, [])
   //run at the start on the render
 
-  console.log(products)
-  console.log(cart)
+  // console.log(products)
+  // console.log(cart)
 
   return (
     <Router>
