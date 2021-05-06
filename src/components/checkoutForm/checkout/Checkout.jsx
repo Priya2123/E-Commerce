@@ -46,7 +46,7 @@ const Checkout = ({cart}) => {
 //as soon as the cart changes, we have to recall for another token --> to avoid error of undefined on refresh
   const Confirmation = () => <div>Confirmation</div>
 
-  const Form = () => (activeStep === 0 ? <AddressForm checkoutToken={checkoutToken} next={next} /> : <PaymentForm shipppingData={shipppingData} checkoutToken={checkoutToken} />)
+  const Form = () => (activeStep === 0 ? <AddressForm checkoutToken={checkoutToken} next={next} /> : <PaymentForm backStep={backStep} shipppingData={shipppingData} checkoutToken={checkoutToken} />)
 
   return (
     <>
