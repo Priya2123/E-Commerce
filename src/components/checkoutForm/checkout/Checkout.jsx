@@ -5,12 +5,15 @@ import {
   Step,
   StepLabel,
   Typography,
+  Divider,
+  Button,
+  CircularProgress
 } from '@material-ui/core'
 import useStyles from './styles'
 import AddressForm from '../AddressForm'
 import PaymentForm from '../PaymentForm'
 import {commerce} from '../../../lib/commerce'
-import {useHistory} from 'react-router-dom'
+import {useHistory, Link} from 'react-router-dom'
 const steps = ['Shipping address', 'Payment details']
 
 const Checkout = ({cart, order, onCaptureCheckout, error}) => {
@@ -37,7 +40,31 @@ const Checkout = ({cart, order, onCaptureCheckout, error}) => {
   const backStep = () => setActiveStep((prevStep) => prevStep - 1);
 
 //as soon as the cart changes, we have to recall for another token --> to avoid error of undefined on refresh
-  const Confirmation = () => <div>Confirmation</div>
+  let Confirmation = () =>( order?.customer ? (
+    <>
+      <div>
+        <Typography variant="h5">Thank you for your purchase, {order.customer.firstname} {order.customer.lastname}</Typography>
+        <Divider className={classes.divider} />
+        <Typography variant="subtitle2">Order ref: {order.customer_reference}</Typography>
+      </div>
+      <br/>
+      <Button variant="outlined" type="button" component={Link} to="/">Back to home</Button>
+    </>
+  ) : (
+    <div className={classes.spinner}>
+      <CircularProgress />
+    </div>
+  ))
+
+  if (error) {
+    Confirmation = () => (
+      <>
+        <Typography variant="h5">Error: {error}</Typography>
+        <br />
+        <Button component={Link} variant="outlined" type="button" to="/">Back to home</Button>
+      </>
+    );
+  }
 
   const Form = () => (activeStep === 0 
     ? <AddressForm checkoutToken={checkoutToken} next={next} /> 
@@ -45,7 +72,6 @@ const Checkout = ({cart, order, onCaptureCheckout, error}) => {
 
     const next = (data) => {
       setShippingData(data)
-      console.log("bleh",shippingData)
       nextStep()
     }
   return (

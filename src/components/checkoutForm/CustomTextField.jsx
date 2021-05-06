@@ -15,6 +15,7 @@ const CustomTextField = ({name, label , required}) => {
             required={required}
             label={label}
             fullWidth
+            defaultValue=""
             render = {({ field})=> (
                 <TextField
                     fullWidth
